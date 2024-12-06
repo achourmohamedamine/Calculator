@@ -1,12 +1,27 @@
 import React,{useState,useEffect} from "react";
-function Timer(){
+function Timer(props){
     const [timeleft,setTimeleft]=useState(30);
-    const timer =setInterval(()=> {
-        setTimeleft((prev)=>prev-1);
-    },1000);
+    useEffect(() => {
+        const interval = setInterval(() => {
+          setTimeleft((prev) => {
+            if (prev<=1) {
+                clearInterval();
+                props.onTimerEnd();
+                return(0);
+            }
+            else {
+                return(prev-1);
+            }
+          });
+        }, 1000);
+    
+        // Cleanup function to clear the interval on unmount or re-render
+        return () => clearInterval(interval);
+      }, []);
+    
      return(<>
          <div className="Timer">
-            <span>{timeleft}</span>
+            <span className="time">{timeleft !=0 ? timeleft : "Time is Over"}</span>
          </div>
      
      </>)

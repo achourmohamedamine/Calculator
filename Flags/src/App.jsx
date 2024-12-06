@@ -8,7 +8,7 @@ import Score from './Score'
 import Timer from './Timer'
 
 function App() {
-  const Flags = [
+  const [Flags,setFlags] =useState( [
     { country: "United States", flag: "https://flagcdn.com/w320/us.png" },
     { country: "Germany", flag: "https://flagcdn.com/w320/de.png" },
     { country: "France", flag: "https://flagcdn.com/w320/fr.png" },
@@ -29,22 +29,21 @@ function App() {
     { country: "Switzerland", flag: "https://flagcdn.com/w320/ch.png" },
     { country: "Norway", flag: "https://flagcdn.com/w320/no.png" },
     { country: "New Zealand", flag: "https://flagcdn.com/w320/nz.png" },
-  ];
+  ]);
     const [currentFlag, setCurrentFlag] = useState(Flags[Math.floor(Math.random() * Flags.length)]);
     const [options, setOptions] = useState([]);
     const [score, setScore] = useState(0);
+    const [TimerActive,setTimerActive]=useState(true);
     
-    useEffect(()=>GenerateNewQuestion(currentFlag),[]);
+    useEffect(()=>GenerateNewQuestion(),[]);
     const shuffle=(array)=>{
       return array.sort(() => Math.random() - 0.5);
 
     }
-    const GenerateNewQuestion=(currentFlag)=>{
+    const GenerateNewQuestion=()=>{
       const correct = Flags[Math.floor(Math.random() * Flags.length)];
-      if (correct.country === currentFlag.country) {
-        Flags.filter((flag)=> flag.country !== correct.country)
-        const correct = Flags[Math.floor(Math.random() * Flags.length)];
-      }
+      setFlags(Flags.filter((flag)=> flag.country !== correct.country))
+      console.log(Flags);
       const incorrect = shuffle(
         Flags.filter((flag) => flag.country !== correct.country)
       ).slice(0, 3);
@@ -57,11 +56,14 @@ function App() {
     const handleAnswer=(selectedCountry)=> {
       if (selectedCountry == currentFlag.country) {
         setScore(s=>s+1);
-       GenerateNewQuestion(currentFlag);
+       GenerateNewQuestion();
       }
       else {
-        GenerateNewQuestion(currentFlag);
+        GenerateNewQuestion();
       }
+    }
+    const handleTimerEnd=()=> {
+      setTimerActive(false);
     }
   
 
@@ -71,8 +73,8 @@ function App() {
       <div className='App'>
         <Score score={score}></Score>
         <Flag country={currentFlag.country} flag={currentFlag.flag}></Flag>
-        <Options countries={options} callback={handleAnswer} ></Options>
-        <Timer></Timer>
+        <Options countries={options} callback={handleAnswer} disabled={!TimerActive} ></Options>
+        <Timer onTimerEnd={handleTimerEnd}></Timer>
       </div>
       
       </>

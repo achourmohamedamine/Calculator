@@ -41,6 +41,16 @@ body{
 }
 span {
   
-  
-  margin-bottom: 40px;
+  font-size: 1.6rem;
+  margin-bottom: 60px;
+}
+.App{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.Timer {
+  margin-top: 50px;
+  font-size: 1.6rem;
 }
